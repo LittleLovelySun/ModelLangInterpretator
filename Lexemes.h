@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -32,7 +34,7 @@ const std::string lex_write = "write";
 // Boolean operations
 const std::string lex_not = "not";
 const std::string lex_and = "and";
-const std::string lex_or = "or"
+const std::string lex_or = "or";
 
 // DELIMETERS
 const std::string lex_comma = ",";
@@ -74,33 +76,38 @@ const std::string lex_comment = "#";
 const std::string lex_quote = "\"";
 
 // Types of lexemes
-enum class LexemeT {
-	unknown = -1, 
-	null,
-	comment,
-	keyword,
-	delimeter,
-	ident,
-	const_int,
-	const_real,
-	const_string,
-	const_bool,
-	data_int;
-	data_real;
-	data_string,
-	data_bool
+enum class LexemT {
+	unknown = -1, //+
+	keyword, //+
+	delimeter, //+
+	ident, //+
+	const_int, //+
+	const_real, //+
+	const_string, //+
+	const_bool, //+
+	data_int, //+
+	data_real, //+
+	data_string, //+
+	data_bool  //+
 };
 
-std::vector<std::string> keywords = {
+enum class IdentT {
+	unknown = -1,
+	type_int,
+	type_real,
+	type_string,
+	type_bool,
+};
+
+const std::vector<std::string> keywords = {
 	lex_program,
-	lex_true, lex_false,
 	lex_while, lex_do, lex_for, lex_break,
 	lex_if, lex_else,
 	lex_read, lex_write,
 	lex_not, lex_and, lex_or
 };
 
-std::vector<std::string> delimeters = {
+const std::vector<std::string> delimeters = {
 	lex_comma, lex_semicolon, 
 	lex_lbrace, lex_rbrace, lex_lparenthesis, lex_rparanthesis,
 
@@ -112,4 +119,37 @@ std::vector<std::string> delimeters = {
 	lex_asign, lex_equal, lex_nequal, lex_greater, lex_less, lex_greater_equal, lex_less_equal,
 
 	lex_comment, lex_quote
+};
+
+class Lexem {
+	LexemT type;
+	std::string name;
+public:
+	Lexem(LexemT type, const std::string &name);
+	LexemT getType();
+	std::string getName();
+};
+
+class Ident {
+	IdentT type;
+	std::string name;
+	std::string value; 
+	bool declared;
+public:
+	Ident(const std::string &name, const std::string &value = "", IdentT type = IdentT::unknown, bool dec = false);
+	void setValue(const std::string &value);
+	void setDec(bool dec);
+	void setType(IdentT type);
+
+	IdentT getType();
+	std::string getName();
+	std::string getValue();
+	bool getDec();
+};
+
+class TableIdent {
+	std::vector<Ident> tab;
+public:
+	void addByName(const std::string &name);
+	Ident* getByName(const std::string &name);
 };

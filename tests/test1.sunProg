@@ -1,0 +1,14 @@
+program {
+	write("How are you?     Bla blb blaaaaa....");
+
+	# this is comment
+
+	int a;
+	int b;
+	string s;
+	bool f = true;
+	bool f2 = false;
+	real x, y, z;
+
+	read(x);
+}
