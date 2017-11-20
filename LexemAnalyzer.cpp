@@ -28,8 +28,9 @@ void LexemAnalyzer::analyze() {
 	size_t ind = 0;
 
 	while (ind < in.length()) {
+		string s = string(1, in[ind]);
 		if (isLetter(in[ind])) {
-			string s = string(s[ind], 1);
+			//string s = string(s[ind], 1);
 			ind++;
 
 			while (ind < in.length() && (isLetter(in[ind]) || isDigit(in[ind]))) {
@@ -56,7 +57,7 @@ void LexemAnalyzer::analyze() {
 			}
 		}
 		else if (isDigit(in[ind])) {
-			string s = string(in[ind], 1);
+			//string s = string(in[ind], 1);
 			ind++;
 			while (ind < in.length() && (isDigit(in[ind]) || string(in[ind], 1) == lex_comma)) {
 				s += in[ind];
@@ -65,10 +66,10 @@ void LexemAnalyzer::analyze() {
 
 			lexems.push_back(Lexem(s.find(lex_comma) == string::npos ? LexemT::const_int : LexemT::const_real, s));
 		} 
-		else if (string(in[ind], 1) == lex_quote) {
-			string s;
+		else if (string(1, in[ind]) == lex_quote) {
+			//string s;
 			ind++;
-			while (ind < in.length() && string(s[ind], 1) != lex_quote) {
+			while (ind < in.length() && string(in[ind], 1) != lex_quote) {
 				s += in[ind];
 				ind++;
 			}
@@ -90,18 +91,35 @@ void LexemAnalyzer::analyze() {
 				s2 += in[ind];
 				ind++;
 
-				if (find(delimeters.begin(), delimeters.end(), s2) < delimeters.end())
+				if (find(delimeters.begin(), delimeters.end(), s2) < delimeters.end()) {
 					lexems.push_back(Lexem(LexemT::delimeter, s2));
-				else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end())
+					s = s2;
+					ind++;
+				}
+				else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) {
 					lexems.push_back(Lexem(LexemT::delimeter, s1));
+					s = s1;
+				}
 			}
-			else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end())
+			else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) {
 				lexems.push_back(Lexem(LexemT::delimeter, s1));
+				s = s1;
+			}
 		}
+		else if (in[ind] == ' ' || in[ind] == '\n' || in[ind] == '\t')
+			ind++;
 		else {
 			lexems.push_back(Lexem(LexemT::unknown, string(in[ind], 1)));
 			ind++;
 		}
+	//cout << "s: " << s << endl;
+	}
+}
+
+void LexemAnalyzer::printLexems() {
+	for (size_t i = 0; i < lexems.size(); i++) {
+		lexems[i].print();
+		cout << endl;
 	}
 }
 

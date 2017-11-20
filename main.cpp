@@ -13,4 +13,6 @@ int main() {
 	analyzer.analyze();
 
 	std::vector<Lexem> lexems = analyzer.getLexems();
+
+	analyzer.printLexems();
 }

@@ -128,6 +128,7 @@ public:
 	Lexem(LexemT type, const std::string &name);
 	LexemT getType();
 	std::string getName();
+	void print();
 };
 
 class Ident {

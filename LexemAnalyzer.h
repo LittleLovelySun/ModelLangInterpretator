@@ -23,6 +23,7 @@ public:
 	void analyze();
 
 	std::vector<Lexem> &getLexems();
+	void printLexems();
 };
 
 #endif
