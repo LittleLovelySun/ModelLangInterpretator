@@ -1,0 +1,65 @@
+#include "Lexem.h"
+
+Lexem::Lexem(LexemT type, const std::string &name) {
+	this->type = type;
+	this->name = name;
+}
+
+Lexem::Lexem(const Lexem &a) {
+	type = a.getType();
+	name = a.getName();
+}
+
+LexemT Lexem::getType() const {
+	return type;
+}
+
+std::string Lexem::getName() const{
+	return name;
+}
+
+
+std::ostream& operator<<(std::ostream &output, const Lexem &a) {
+	output << '|' << a.getName();
+	std::string s = std::string(wid - 1 - a.getName().length(), ' ');
+	output << s;
+
+	switch (a.getType()) {
+		case LexemT::unknown: std::cout << '|' << str_unknown << std::string(wid - 2 - str_unknown.length(), ' ') << '|';
+		break;
+
+		case LexemT::keyword: std::cout << '|'  << str_keyword << std::string(wid - 2 - str_keyword.length(), ' ') << '|';
+		break;
+
+		case LexemT::delimeter: std:: cout << '|'  << str_delimeter << std::string(wid - 2 - str_delimeter.length(), ' ') << '|';
+		break;
+
+		case LexemT::ident: std::cout << '|' <<  str_ident  << std::string(wid - 2 - str_ident.length(), ' ') << '|';
+		break;
+
+		case LexemT::const_int: std::cout << '|'  << str_const_int << std::string(wid - 2 - str_const_int.length(), ' ') << '|';
+		break;
+
+		case LexemT::const_real: std::cout << '|'  << str_const_real << std::string(wid - 2 - str_const_real.length(), ' ') << '|';
+		break;
+
+		case LexemT::const_string: std::cout << '|'  << str_const_string << std::string(wid - 2 - str_const_string.length(), ' ') << '|';
+		break;
+
+		case LexemT::const_bool: std::cout << '|'  << str_const_bool << std::string(wid - 2 - str_const_bool.length(), ' ') << '|';
+		break;
+
+		case LexemT::data_int: std::cout << '|'  << str_data_int << std::string(wid - 2 - str_data_int.length(), ' ') << '|';
+		break;
+
+		case LexemT::data_real: std::cout << '|'  << str_data_real << std::string(wid - 2 - str_data_real.length(), ' ') << '|';
+		break;
+
+		case LexemT::data_string: std::cout << '|'  << str_data_string << std::string(wid - 2 - str_data_string.length(), ' ') << '|';
+		break;
+
+		case LexemT::data_bool: std::cout << '|'  << str_data_bool << std::string(wid - 2 - str_data_bool.length(), ' ') << '|';
+		break;
+	}
+	return output;
+}

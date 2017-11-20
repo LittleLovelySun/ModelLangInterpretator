@@ -1,14 +1,15 @@
 #ifndef LEXEM_ANALYZER
 #define LEXEM_ANALYZER
 
-#include "Lexemes.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <algorithm>
 #include <vector>
 
-
+#include "Lexem.h"
+#include "Ident.h"
+#include "TableIdent.h"
 
 class LexemAnalyzer {
 	std::string in;

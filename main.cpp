@@ -1,5 +1,5 @@
-#include "Lexemes.h"
 #include "LexemAnalyzer.h"
+#include "SyntacticAnalyzer.h"
 
 #include <iostream>
 #include <fstream>
@@ -15,4 +15,7 @@ int main() {
 	std::vector<Lexem> lexems = analyzer.getLexems();
 
 	analyzer.printLexems();
+	analyzer.printTable();
+
+	SyntacticAnalyzer a();
 }

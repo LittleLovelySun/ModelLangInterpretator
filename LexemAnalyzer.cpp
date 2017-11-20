@@ -116,11 +116,17 @@ void LexemAnalyzer::printLexems() const {
 		return ;
 
 	cout << tmp << tmp << endl;
-	cout << '|' << str_type << string(wid - 1 - str_type.length(), ' ') << '|' << str_name << string(wid - 2 - str_name.length(), ' ') << '|' << endl << tmp << tmp << endl;
+	cout << '|' << str_type << string(wid - 1 - str_type.length(), ' ');
+	cout << '|' << str_name << string(wid - 2 - str_name.length(), ' ');
+	cout << '|' << endl << tmp << tmp << endl;
 	for (size_t i = 0; i < lexems.size(); i++) 
 		cout << lexems[i] << endl;
 
 	cout << tmp << tmp << endl;
+}
+
+void LexemAnalyzer::printTable() const {
+	cout << "Table:\n" << table;
 }
 
 vector<Lexem> &LexemAnalyzer::getLexems() {
