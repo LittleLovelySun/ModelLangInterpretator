@@ -25,7 +25,7 @@ void Lexem::print() {
 		case LexemT::delimeter: std:: cout << "delimeter";
 		break;
 
-		case LexemT::ident: std::cout << "delimeter";
+		case LexemT::ident: std::cout << "ident";
 		break;
 
 		case LexemT::const_int: std::cout << "const_int";

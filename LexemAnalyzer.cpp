@@ -28,9 +28,9 @@ void LexemAnalyzer::analyze() {
 	size_t ind = 0;
 
 	while (ind < in.length()) {
-		string s = string(1, in[ind]);
 		if (isLetter(in[ind])) {
-			//string s = string(s[ind], 1);
+
+			string s = string(1, in[ind]);
 			ind++;
 
 			while (ind < in.length() && (isLetter(in[ind]) || isDigit(in[ind]))) {
@@ -57,62 +57,57 @@ void LexemAnalyzer::analyze() {
 			}
 		}
 		else if (isDigit(in[ind])) {
-			//string s = string(in[ind], 1);
+			string s = string(1, in[ind]);
 			ind++;
-			while (ind < in.length() && (isDigit(in[ind]) || string(in[ind], 1) == lex_comma)) {
+			while (ind < in.length() && (isDigit(in[ind]) || string(1, in[ind]) == lex_comma)) { // поди та ошибка
 				s += in[ind];
 				ind++;
 			}
 
 			lexems.push_back(Lexem(s.find(lex_comma) == string::npos ? LexemT::const_int : LexemT::const_real, s));
 		} 
-		else if (string(1, in[ind]) == lex_quote) {
-			//string s;
+		else if (string(1, in[ind]) == lex_quote) { // как будто всё равно не хватает(
+			string s;
 			ind++;
-			while (ind < in.length() && string(in[ind], 1) != lex_quote) {
+			while (ind < in.length() && string(1, in[ind]) != lex_quote) {
 				s += in[ind];
 				ind++;
 			}
 
 			lexems.push_back(Lexem(LexemT::const_string, s));
 			ind++;
+			// не ну можно ещё прибавть :
 		}
-		else if (string(in[ind], 1) == lex_comment) {
+		else if (string(1, in[ind]) == lex_comment) {
 			while (ind < in.length() && in[ind] != '\n') 
 				ind++;
 			ind++;
 		}
 		else if (isLikeDelimeter(in[ind])) {
-			string s1 = string(in[ind], 1);
+			string s1 = string(1, in[ind]);
 			ind++;
 
 			if (ind < in.length()) {
 				string s2 = s1;
 				s2 += in[ind];
-				ind++;
 
 				if (find(delimeters.begin(), delimeters.end(), s2) < delimeters.end()) {
 					lexems.push_back(Lexem(LexemT::delimeter, s2));
-					s = s2;
 					ind++;
 				}
-				else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) {
+				else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) 
 					lexems.push_back(Lexem(LexemT::delimeter, s1));
-					s = s1;
-				}
 			}
-			else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) {
+			else if (find(delimeters.begin(), delimeters.end(), s1) < delimeters.end()) 
 				lexems.push_back(Lexem(LexemT::delimeter, s1));
-				s = s1;
-			}
+			
 		}
 		else if (in[ind] == ' ' || in[ind] == '\n' || in[ind] == '\t')
 			ind++;
 		else {
-			lexems.push_back(Lexem(LexemT::unknown, string(in[ind], 1)));
+			lexems.push_back(Lexem(LexemT::unknown, string(1, in[ind])));
 			ind++;
 		}
-	//cout << "s: " << s << endl;
 	}
 }
 
