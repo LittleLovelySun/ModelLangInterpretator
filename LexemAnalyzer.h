@@ -9,6 +9,7 @@
 #include <vector>
 
 
+
 class LexemAnalyzer {
 	std::string in;
 	std::vector<Lexem> lexems;
@@ -23,7 +24,9 @@ public:
 	void analyze();
 
 	std::vector<Lexem> &getLexems();
-	void printLexems();
+	void printLexems() const;
+	void printTable() const;
 };
+
 
 #endif

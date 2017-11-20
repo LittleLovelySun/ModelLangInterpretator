@@ -4,6 +4,27 @@
 #include <string>
 #include <vector>
 
+const int wid = 50;
+const char ch = '~';
+
+const std::string tmp = std::string(wid, ch); 
+const std::string str_type = "Type";
+const std::string str_name = "Name";
+const std::string str_value = "Value";
+const std::string str_unknown = "unknown";
+const std::string str_keyword = "keyword";
+const std::string str_delimeter = "delimeter";
+const std::string str_ident = "ident";
+const std::string str_const_int = "const_int";
+const std::string str_const_real = "const_real";
+const std::string str_const_string = "const_string";
+const std::string str_const_bool = "const_bool";
+const std::string str_data_int = "data_int";
+const std::string str_data_real = "data_real";
+const std::string str_data_string = "data_string";
+const std::string str_data_bool = "data_bool";
+
+
 // Begin 
 const std::string lex_program = "program";
 
@@ -126,10 +147,13 @@ class Lexem {
 	std::string name;
 public:
 	Lexem(LexemT type, const std::string &name);
-	LexemT getType();
-	std::string getName();
-	void print();
+	LexemT getType() const;
+	std::string getName() const;
+	friend std::ostream& operator<<(std::ostream &output, const Lexem &a);
 };
+
+
+std::ostream& operator<<(std::ostream &os, const Lexem &a);
 
 class Ident {
 	IdentT type;
@@ -142,10 +166,10 @@ public:
 	void setDec(bool dec);
 	void setType(IdentT type);
 
-	IdentT getType();
-	std::string getName();
-	std::string getValue();
-	bool getDec();
+	IdentT getType() const;
+	std::string getName() const;
+	std::string getValue() const;
+	bool getDec() const;
 };
 
 class TableIdent {

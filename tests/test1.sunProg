@@ -8,6 +8,7 @@ program {
 	string s;
 	bool f = true;
 	bool f2 = false;
+	lbolbbi + read();
 	real x, y, z;
 
 	read(x);

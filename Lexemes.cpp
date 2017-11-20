@@ -5,55 +5,57 @@ Lexem::Lexem(LexemT type, const std::string &name) {
 	this->name = name;
 }
 
-LexemT Lexem::getType() {
+LexemT Lexem::getType() const {
 	return type;
 }
 
-std::string Lexem::getName() {
+std::string Lexem::getName() const{
 	return name;
 }
 
-void Lexem::print() {
-	std::cout << "type: ";
-	switch (type) {
-		case LexemT::unknown: std::cout << "unknown";
+std::ostream& operator<<(std::ostream &output, const Lexem &a) {
+	output << '|' << a.getName();
+	std::string s = std::string(wid - 1 - a.getName().length(), ' ');
+	output << s;
+
+	switch (a.getType()) {
+		case LexemT::unknown: std::cout << '|' << str_unknown << std::string(wid - 2 - str_unknown.length(), ' ') << '|';
 		break;
 
-		case LexemT::keyword: std::cout << "keyword";
+		case LexemT::keyword: std::cout << '|'  << str_keyword << std::string(wid - 2 - str_keyword.length(), ' ') << '|';
 		break;
 
-		case LexemT::delimeter: std:: cout << "delimeter";
+		case LexemT::delimeter: std:: cout << '|'  << str_delimeter << std::string(wid - 2 - str_delimeter.length(), ' ') << '|';
 		break;
 
-		case LexemT::ident: std::cout << "ident";
+		case LexemT::ident: std::cout << '|' <<  str_ident  << std::string(wid - 2 - str_ident.length(), ' ') << '|';
 		break;
 
-		case LexemT::const_int: std::cout << "const_int";
+		case LexemT::const_int: std::cout << '|'  << str_const_int << std::string(wid - 2 - str_const_int.length(), ' ') << '|';
 		break;
 
-		case LexemT::const_real: std::cout << "const_real";
+		case LexemT::const_real: std::cout << '|'  << str_const_real << std::string(wid - 2 - str_const_real.length(), ' ') << '|';
 		break;
 
-		case LexemT::const_string: std::cout << "const_string";
+		case LexemT::const_string: std::cout << '|'  << str_const_string << std::string(wid - 2 - str_const_string.length(), ' ') << '|';
 		break;
 
-		case LexemT::const_bool: std::cout << "const_bool";
+		case LexemT::const_bool: std::cout << '|'  << str_const_bool << std::string(wid - 2 - str_const_bool.length(), ' ') << '|';
 		break;
 
-		case LexemT::data_int: std::cout << "data_int";
+		case LexemT::data_int: std::cout << '|'  << str_data_int << std::string(wid - 2 - str_data_int.length(), ' ') << '|';
 		break;
 
-		case LexemT::data_real: std::cout << "data_real";
+		case LexemT::data_real: std::cout << '|'  << str_data_real << std::string(wid - 2 - str_data_real.length(), ' ') << '|';
 		break;
 
-		case LexemT::data_string: std::cout << "data_string";
+		case LexemT::data_string: std::cout << '|'  << str_data_string << std::string(wid - 2 - str_data_string.length(), ' ') << '|';
 		break;
 
-		case LexemT::data_bool: std::cout << "data_bool";
+		case LexemT::data_bool: std::cout << '|'  << str_data_bool << std::string(wid - 2 - str_data_bool.length(), ' ') << '|';
 		break;
 	}
-
-	std::cout << "\t name: " << name;
+	return output;
 }
 
 Ident::Ident(const std::string &name, const std::string &value, IdentT type, bool dec) {
@@ -75,19 +77,19 @@ void Ident::setType(IdentT type) {
 	this->type = type;
 }
 
-std::string Ident::getName() {
+std::string Ident::getName() const{
 	return name;
 }
 
-std::string Ident::getValue() {
+std::string Ident::getValue() const{
 	return value;
 }
 
-IdentT Ident::getType() {
+IdentT Ident::getType() const{
 	return type;
 }
 
-bool Ident::getDec() {
+bool Ident::getDec() const{
 	return declared;
 }
 
