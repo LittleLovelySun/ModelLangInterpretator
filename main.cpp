@@ -6,16 +6,22 @@
 #include <vector>
 
 int main() {
-	std::ifstream f("tests/test1.sunProg");
+	try {
+		std::ifstream f("tests/test1.sunProg");
 
-	LexemAnalyzer analyzer(f);
+		LexemAnalyzer analyzer(f);
 
-	analyzer.analyze();
+		analyzer.analyze();
 
-	std::vector<Lexem> lexems = analyzer.getLexems();
+		std::vector<Lexem> lexems = analyzer.getLexems();
 
-	analyzer.printLexems();
-	analyzer.printTable();
+		analyzer.printLexems();
+		analyzer.printTable();
 
-	SyntacticAnalyzer a();
+		SyntacticAnalyzer a(analyzer.getLexems(), analyzer.getTable());
+		a.analyze();
+	}
+	catch (std::string msg) {
+		std::cout << "Expresions: " << msg << std::endl;
+	}
 }

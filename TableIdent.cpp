@@ -2,11 +2,6 @@
 
 #include <vector>
 
-/*TableIdent::TableIdent(const TableIdent &a) {
-	for (size_t i = 0; i < a.size(); i++)
-		tab.push_back(a.tab[i]);
-}*/
-
 void TableIdent::addByName(const std::string &name) {
 	for (size_t i = 0; i < tab.size(); i++) 
 		if (tab[i].getName() == name) 

@@ -16,7 +16,10 @@ class SyntacticAnalyzer {
 
 public:
 	SyntacticAnalyzer(const std::vector<Lexem> &lex, const TableIdent &tab);
-	void Analyze(size_t ind = 0);
+	void analyze(size_t ind = 0);
+
+	//void printLexems() const;
+	void printTable() const;
 
 };
 

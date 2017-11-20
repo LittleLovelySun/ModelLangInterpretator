@@ -132,3 +132,7 @@ void LexemAnalyzer::printTable() const {
 vector<Lexem> &LexemAnalyzer::getLexems() {
 	return lexems;
 }
+
+TableIdent &LexemAnalyzer::getTable() {
+	return table;
+}

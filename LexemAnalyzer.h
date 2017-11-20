@@ -25,6 +25,7 @@ public:
 	void analyze();
 
 	std::vector<Lexem> &getLexems();
+	TableIdent &getTable();
 	void printLexems() const;
 	void printTable() const;
 };
