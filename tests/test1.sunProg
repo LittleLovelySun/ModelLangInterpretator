@@ -1,19 +1,9 @@
-
-read
 program {
-	write("How are you?     Bla blb blaaaaa....");
+int a, i;
 
-	# this is comment
-
-	int a;
-	int b;
-	string s;
-	bool f = true;
-	bool f2 = false;
-	lbolbbi + read();
-	real x, y, z;
-
-	read(x);
+bool b = true;
+string s, s1, s2;
+for (;i<10;) {
+	read(a, i);
 }
-
-"coooool!!!"
+}

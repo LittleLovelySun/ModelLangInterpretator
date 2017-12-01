@@ -4,13 +4,16 @@
 #include <string>
 #include <vector>
 
-const int wid = 50;
+const int wid = 40;
+const int widIdent = 25;
 const char ch = '~';
 
 const std::string tmp = std::string(wid, ch); 
+const std::string tmpIdent = std::string(widIdent, ch);
 const std::string str_type = "Type";
 const std::string str_name = "Name";
 const std::string str_value = "Value";
+const std::string str_declareted = "Declareted";
 const std::string str_unknown = "unknown";
 const std::string str_keyword = "keyword";
 const std::string str_delimeter = "delimeter";
@@ -23,6 +26,10 @@ const std::string str_data_int = "data_int";
 const std::string str_data_real = "data_real";
 const std::string str_data_string = "data_string";
 const std::string str_data_bool = "data_bool";
+const std::string str_type_int = "int";
+const std::string str_type_real = "real";
+const std::string str_type_string = "string";
+const std::string str_type_bool = "bool";
 
 
 // Begin 
@@ -42,7 +49,7 @@ const std::string lex_false = "false";
 const std::string lex_while = "while";
 const std::string lex_do = "do";
 const std::string lex_for = "for";
-const std::string lex_break = "break";
+//const std::string lex_break = "break";
 
 // Conditional
 const std::string lex_if = "if";
@@ -58,6 +65,7 @@ const std::string lex_and = "and";
 const std::string lex_or = "or";
 
 // DELIMETERS
+const std::string lex_point = "."; 
 const std::string lex_comma = ",";
 const std::string lex_semicolon = ";";
 
@@ -122,7 +130,7 @@ enum class IdentT {
 
 const std::vector<std::string> keywords = {
 	lex_program,
-	lex_while, lex_do, lex_for, lex_break,
+	lex_while, lex_do, lex_for,
 	lex_if, lex_else,
 	lex_read, lex_write,
 	lex_not, lex_and, lex_or
@@ -140,41 +148,4 @@ const std::vector<std::string> delimeters = {
 	lex_asign, lex_equal, lex_nequal, lex_greater, lex_less, lex_greater_equal, lex_less_equal,
 
 	lex_comment, lex_quote
-};
-
-class Lexem {
-	LexemT type;
-	std::string name;
-public:
-	Lexem(LexemT type, const std::string &name);
-	LexemT getType() const;
-	std::string getName() const;
-	friend std::ostream& operator<<(std::ostream &output, const Lexem &a);
-};
-
-
-std::ostream& operator<<(std::ostream &os, const Lexem &a);
-
-class Ident {
-	IdentT type;
-	std::string name;
-	std::string value; 
-	bool declared;
-public:
-	Ident(const std::string &name, const std::string &value = "", IdentT type = IdentT::unknown, bool dec = false);
-	void setValue(const std::string &value);
-	void setDec(bool dec);
-	void setType(IdentT type);
-
-	IdentT getType() const;
-	std::string getName() const;
-	std::string getValue() const;
-	bool getDec() const;
-};
-
-class TableIdent {
-	std::vector<Ident> tab;
-public:
-	void addByName(const std::string &name);
-	Ident* getByName(const std::string &name);
 };

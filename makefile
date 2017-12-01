@@ -1,9 +1,9 @@
 #[название выходного файла - программы]  
 NAME=ModelLang
 #[название комилятора]
-COMPILER=g++
+COMPILER=clang++
 #[файлы для компиляции]
-FILES=*.cpp
+FILES=*.cpp analyzers/*.cpp entities/*.cpp
 #[используемый стандарт языка]
 STD=c++14
 #OPTIMIZE_LEVEL=[уровень оптимизации, 0 - не оптимизировать]

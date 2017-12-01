@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "Lexem.h"
-#include "Ident.h"
-#include "TableIdent.h"
+#include "../entities/Lexem.h"
+#include "../entities/Ident.h"
+#include "../entities/TableIdent.h"
 
 class LexemAnalyzer {
 	std::string in;
@@ -22,10 +22,11 @@ class LexemAnalyzer {
 public:
 	LexemAnalyzer(const std::string &in);
 	LexemAnalyzer(std::ifstream &input);
-	void analyze();
+	bool analyze();
 
 	std::vector<Lexem> &getLexems();
 	TableIdent &getTable();
+	std::string &getString();
 	void printLexems() const;
 	void printTable() const;
 };

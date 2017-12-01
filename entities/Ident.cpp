@@ -26,6 +26,17 @@ void Ident::setType(IdentT type) {
 	this->type = type;
 }
 
+void Ident::setAsDefault() {
+	if (type == IdentT::type_int)
+		value = "0";
+	else if (type == IdentT::type_real)
+		value = "0";
+	else if (type == IdentT::type_string)
+		value = ""; 
+	else 
+		value = lex_false;
+}
+
 std::string Ident::getName() const{
 	return name;
 }
@@ -40,6 +51,17 @@ IdentT Ident::getType() const{
 
 bool Ident::getDec() const{
 	return declared;
+}
+
+std::string Ident::TypeToString() const {
+	switch(type) {
+		case IdentT::type_int: return str_type_int;
+		case IdentT::type_real: return str_type_real;
+		case IdentT::type_string: return str_type_string;
+		case IdentT::type_bool: return str_type_bool;
+		case IdentT::unknown: 
+		default: return str_unknown;
+	}
 }
 
 std::ostream& operator<<(std::ostream &output, const Ident &a) {

@@ -1,27 +1,31 @@
-#include "LexemAnalyzer.h"
-#include "SyntacticAnalyzer.h"
+#include "analyzers/LexemAnalyzer.h"
+#include "analyzers/SyntacticAnalyzer.h"
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 
-int main() {
+int main(int argc, char** argv) {
 	try {
-		std::ifstream f("tests/test1.sunProg");
+		std::ifstream f(argv[1]);
 
 		LexemAnalyzer analyzer(f);
 
-		analyzer.analyze();
+		if (!analyzer.analyze())
+			return -1;
 
 		std::vector<Lexem> lexems = analyzer.getLexems();
 
 		analyzer.printLexems();
 		analyzer.printTable();
 
-		SyntacticAnalyzer a(analyzer.getLexems(), analyzer.getTable());
-		a.analyze();
+		SyntacticAnalyzer a(analyzer.getLexems(), analyzer.getTable(), analyzer.getString());
+		if (a.analyze())  {
+			std::cout << "Great!" << std::endl;
+			a.printTable();
+		}
 	}
-	catch (std::string msg) {
-		std::cout << "Expresions: " << msg << std::endl;
+	catch (std::string msg){
+		std::cout << msg << std::endl;
 	}
 }

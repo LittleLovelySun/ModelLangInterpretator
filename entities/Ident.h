@@ -18,11 +18,14 @@ public:
 	void setValue(const std::string &value);
 	void setDec(bool dec);
 	void setType(IdentT type);
+	void setAsDefault();
 
 	IdentT getType() const;
 	std::string getName() const;
 	std::string getValue() const;
 	bool getDec() const;
+
+	std::string TypeToString() const;
 
 	friend std::ostream& operator<<(std::ostream &output, const Ident &a);
 };
