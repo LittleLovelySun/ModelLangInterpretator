@@ -48,4 +48,5 @@ public:
 	SyntacticAnalyzer(const std::vector<Lexem> &lex, const TableIdent &tab, const std::string input);
 	bool analyze();
 	void printTable() const;
+	void printRPN() const;
 };

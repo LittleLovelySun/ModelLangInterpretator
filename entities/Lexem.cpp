@@ -115,6 +115,7 @@ std::ostream& operator<<(std::ostream &output, const Lexem &a) {
 
 		case LexemT::data_bool: std::cout << '|'  << str_data_bool << std::string(wid - 2 - str_data_bool.length(), ' ') << '|';
 		break;
+		default: ;
 	}
 	return output;
 }

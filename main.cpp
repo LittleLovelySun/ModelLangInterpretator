@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
 		if (a.analyze())  {
 			std::cout << "Great!" << std::endl;
 			a.printTable();
+			a.printRPN();
 		}
 	}
 	catch (std::string msg){

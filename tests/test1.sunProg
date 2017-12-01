@@ -3,7 +3,8 @@ int a, i;
 
 bool b = true;
 string s, s1, s2;
-for (;i<10;) {
-	read(a, i);
-}
+
+for(i = 0; i < 10; i++);;;;;;
+
+write("fghjkg");
 }

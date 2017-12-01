@@ -233,17 +233,31 @@ void SyntacticAnalyzer::parseWhile() {
 
 	nextLex();
 
+	size_t conditionLabel = rpn.size(); 
+
 	if (parseExpression() != IdentT::type_bool)
 		throw string("Expresion must have bool type in condition") + " line:" + to_string(currLex().getLineNum()) + "\n" + getString();
 
+	size_t falseLabel = rpn.size();
+	rpn.push_back(Lexem(LexemT::rpn_label, "-1"));
+	rpn.push_back(Lexem(LexemT::rpn_fgo, ""));
+
 	if (!currLex().check(lex_rparanthesis))
 		throw string("Unexpected symbol in 'while'") + " line:" + to_string(currLex().getLineNum()) + "\n" + getString();
+
 	nextLex();
 	parse();
+
+	rpn.push_back(Lexem(LexemT::rpn_label, to_string(conditionLabel)));
+	rpn.push_back(Lexem(LexemT::rpn_go, ""));
+
+	rpn[falseLabel].setName(to_string(rpn.size()));
 }
 
 void SyntacticAnalyzer::parseDoWhile() {
 	nextLex();
+
+	size_t doLabel = rpn.size();
 
 	parse(); 
 
@@ -262,6 +276,10 @@ void SyntacticAnalyzer::parseDoWhile() {
 	if (!currLex().check(lex_rparanthesis))
 		throw string ("Uncapped bracket") + " line:" + to_string(currLex().getLineNum()) + "\n" + getString();
 
+	size_t falseLabel = rpn.size();
+	rpn.push_back(Lexem(LexemT::rpn_label, ""));
+	rpn.push_back(Lexem(LexemT::rpn_fgo, ""));
+
 	nextLex();
 
 	//TODO: checkDelimeter(lex_semicolon);
@@ -270,7 +288,12 @@ void SyntacticAnalyzer::parseDoWhile() {
 
 	nextLex();
 
+	rpn.push_back(Lexem(LexemT::rpn_label, to_string(doLabel)));
+	rpn.push_back(Lexem(LexemT::rpn_go, ""));
+
+	rpn[falseLabel].setName(to_string(rpn.size()));
 }
+
 void SyntacticAnalyzer::parseIf() {
 	nextLex();
 
@@ -282,6 +305,10 @@ void SyntacticAnalyzer::parseIf() {
 	if (parseExpression() != IdentT::type_bool)
 		throw string("Expresion can be only bool in condition in line ") + to_string(currLex().getLineNum()) + getString();
 	
+	size_t labelIf = rpn.size();
+
+	rpn.push_back(Lexem(LexemT::rpn_label, "-1"));
+	rpn.push_back(Lexem(LexemT::rpn_fgo, ""));
 	
 	if (!currLex().check(lex_rparanthesis))
 		throw string ("Uncapped bracket in line ") + to_string(currLex().getLineNum()) + getString();
@@ -290,9 +317,19 @@ void SyntacticAnalyzer::parseIf() {
 
 	parse();
 
+	rpn[labelIf].setName(to_string(rpn.size()));
+
 	if (currLex().check(lex_else)) {
+		size_t  labelElse = rpn.size();
+
+		rpn.push_back(Lexem(LexemT::rpn_label, "-1"));
+		rpn.push_back(Lexem(LexemT::rpn_go, ""));
+		rpn[labelIf].setName(to_string(rpn.size()));
+		
 		nextLex();
 		parse();	
+
+		rpn[labelElse].setName(to_string(rpn.size()));
 	}
 }
 
@@ -309,6 +346,8 @@ void SyntacticAnalyzer::parseFor() {
 	else
 		nextLex();
 
+	size_t beginLable = rpn.size();
+
 	if (!currLex().check(lex_semicolon)) {
 		if (parseExpression() != IdentT::type_bool)
 			throw string("Expresion can be only bool in condition in line ") + to_string(currLex().getLineNum()) + "\n" + getString();
@@ -316,6 +355,11 @@ void SyntacticAnalyzer::parseFor() {
 		if (!currLex().check(lex_semicolon))
 			throw string ("Missing ';' ") + getString();
 	}
+
+	size_t falseLabel = rpn.size();
+
+	rpn.push_back(Lexem(LexemT::rpn_label, "-1"));
+	rpn.push_back(Lexem(LexemT::rpn_fgo, ""));
 
 	nextLex();
 
@@ -328,6 +372,11 @@ void SyntacticAnalyzer::parseFor() {
 
 	nextLex();
 	parse();
+
+	rpn.push_back(Lexem(LexemT::rpn_label, to_string(beginLable)));
+	rpn.push_back(Lexem(LexemT::rpn_go, ""));
+
+	rpn[falseLabel].setName(to_string(rpn.size()));
 }
 
 void SyntacticAnalyzer::parseRead() {
@@ -337,9 +386,10 @@ void SyntacticAnalyzer::parseRead() {
 		throw string("Missing '(' in 'read'in line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 
 	do {
-		nextLex();
+		string address = nextLex().getName();
 		parseIdent();
-
+		rpn.push_back(Lexem(LexemT::rpn_address, address));
+		rpn.push_back(Lexem(LexemT::keyword, lex_read));
 	} while (currLex().check(lex_comma));
 
 	if (!currLex().check(lex_rparanthesis))
@@ -362,7 +412,9 @@ void SyntacticAnalyzer::parseWrite() {
 	do {
 		nextLex();
 		parseExpression();
+		rpn.push_back(Lexem(LexemT::keyword, lex_write));
 	} while (currLex().check(lex_comma));
+
 
 
 	if (!currLex().check(lex_rparanthesis))
@@ -383,6 +435,8 @@ IdentT SyntacticAnalyzer::parseExpression() {
 		nextLex();
 
 		IdentT right = term();
+		rpn.push_back(sign);
+
 		left = checkTypes(left, sign, right);
 	}	
 
@@ -397,6 +451,7 @@ IdentT SyntacticAnalyzer::term() {
 		nextLex();
 
 		IdentT right = term1();
+		rpn.push_back(sign);
 		left = checkTypes(left, sign, right);
 	}
 
@@ -411,6 +466,7 @@ IdentT SyntacticAnalyzer::term1() {
 		nextLex();
 
 		IdentT right = entity();
+		rpn.push_back(sign);
 		left = checkTypes(left, sign, right);
 	}
 
@@ -419,10 +475,14 @@ IdentT SyntacticAnalyzer::term1() {
 
 IdentT SyntacticAnalyzer::entity() {
 	if (currLex().check(LexemT::ident)) {
+		rpn.push_back(currLex());
+
 		return parseIdent();
 	}
 
 	if (currLex().isConst()) {
+		rpn.push_back(currLex());
+
 		Lexem currlex = currLex(); 
 		nextLex();
 
@@ -433,6 +493,8 @@ IdentT SyntacticAnalyzer::entity() {
 		nextLex();
 
 		IdentT entT = entity();
+
+		rpn.push_back(Lexem(LexemT::keyword, lex_not));
 
 		if (entT != IdentT::type_bool)
 			throw string("'not' can't invert non boolean expression in line ") + to_string(currLex().getLineNum()) + "\n" + getString();
@@ -456,7 +518,10 @@ IdentT SyntacticAnalyzer::entity() {
 }
 
 void SyntacticAnalyzer::parseAsign(bool needSemicolon) {
+	string name = currLex().getName();
 	IdentT left = parseIdent();
+
+	rpn.push_back(Lexem(LexemT::rpn_address, name));
 
 	if (currLex().check(lex_asign)) {
 		nextLex();
@@ -464,10 +529,15 @@ void SyntacticAnalyzer::parseAsign(bool needSemicolon) {
 
 		if (!(left == right || (left == IdentT::type_real && right == IdentT::type_int)))
 			throw string("'") + typeToString(right) + "' is incompatible with '" + typeToString(left) + "' in line " + to_string(currLex().getLineNum()) + "\n" + getString();
+
+		rpn.push_back(Lexem(LexemT::delimeter, lex_asign));
 	}
 	else if (currLex().check(lex_inc) || currLex().check(lex_dec)) {
 		if (left != IdentT::type_int)
 			throw string("'") + currLex().getName() + "' is incompatible with '" + typeToString(left) + "' in line " + to_string(currLex().getLineNum()) + "\n" + getString();
+
+		rpn.push_back(Lexem(currLex().check(lex_inc) ? LexemT::rpn_inc : LexemT::rpn_dec, currLex().getName()));
+
 		nextLex();
 	} 
 	else {
@@ -495,6 +565,8 @@ void SyntacticAnalyzer::parseAsign(bool needSemicolon) {
 		IdentT right = parseExpression();
 
 		checkTypes(left, sign, right);
+
+		rpn.push_back(Lexem(LexemT::rpn_short_op, sign.getName()));
 	}
 
 	if (needSemicolon) {
@@ -520,4 +592,22 @@ string typeToString(IdentT type) {
 		case IdentT::unknown: 
 		default: return str_unknown;
 	}
+}
+
+void SyntacticAnalyzer::printRPN() const{
+	size_t index = 0;
+
+	while (index < rpn.size()) {
+		if (rpn[index].check(LexemT::rpn_fgo))
+			cout << "[fgo] ";
+		else if (rpn[index].check(LexemT::rpn_go))
+			cout << "[go] ";
+		else if (rpn[index].check(LexemT::rpn_address))
+			cout << "[&" << rpn[index].getName() << "] ";
+		else
+			cout << "[" << rpn[index].getName() << "] ";
+		
+		index++;
+	}
+	cout << endl;
 }

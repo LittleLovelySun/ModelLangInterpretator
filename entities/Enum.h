@@ -106,18 +106,26 @@ const std::string lex_quote = "\"";
 
 // Types of lexemes
 enum class LexemT {
-	unknown = -1, //+
-	keyword, //+
-	delimeter, //+
-	ident, //+
-	const_int, //+
-	const_real, //+
-	const_string, //+
-	const_bool, //+
-	data_int, //+
-	data_real, //+
-	data_string, //+
-	data_bool  //+
+	unknown = -1, 
+	keyword, 
+	delimeter,
+	ident, 
+	const_int, 
+	const_real, 
+	const_string,
+	const_bool, 
+	data_int,
+	data_real, 
+	data_string,
+	data_bool, 
+
+	rpn_address,
+	rpn_go,
+	rpn_fgo,
+	rpn_label,
+	rpn_inc,
+	rpn_dec,
+	rpn_short_op
 };
 
 enum class IdentT {
