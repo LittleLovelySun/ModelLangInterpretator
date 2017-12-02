@@ -112,8 +112,13 @@ bool LexemAnalyzer::analyze() {
 				lexems.push_back(Lexem(LexemT::delimeter, s1, line_num, line_ind));
 			
 		}
-		else if (in[ind] == ' ' || in[ind] == '\n' || in[ind] == '\t') 
+		else if (in[ind] == ' ' || in[ind] == '\n' || in[ind] == '\t')  {
+			if (in[ind] == '\n') {
+				line_num++;
+				line_ind = ind + 1;
+			}
 			ind++;
+		}
 		else {
 			cout << "Unknown lexem '" << in[ind] << endl;
 			return false;

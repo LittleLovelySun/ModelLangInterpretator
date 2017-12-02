@@ -7,6 +7,7 @@
 #include "../entities/Lexem.h"
 #include "../entities/Ident.h"
 #include "../entities/TableIdent.h"
+#include "../entities/Enum.h"
 
 std::string typeToString(IdentT type);
 
@@ -28,7 +29,7 @@ class SyntacticAnalyzer {
 	void parseIf();
 	void parseFor();
 	void parseRead();
-	void parseWrite();
+	void parseWrite(bool isWriteln);
 	void parseAsign(bool needSemicolon = true);
 
 	IdentT parseExpression();
@@ -49,4 +50,7 @@ public:
 	bool analyze();
 	void printTable() const;
 	void printRPN() const;
+
+	TableIdent &getTableIdent();
+	std::vector<Lexem> &getRPN();
 };

@@ -10,6 +10,7 @@
 #include "../entities/Lexem.h"
 #include "../entities/Ident.h"
 #include "../entities/TableIdent.h"
+#include "../entities/Enum.h"
 
 class LexemAnalyzer {
 	std::string in;

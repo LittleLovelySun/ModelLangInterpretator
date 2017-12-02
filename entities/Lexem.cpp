@@ -23,7 +23,7 @@ std::string Lexem::getName() const{
 }
 
 size_t Lexem::getLineNum() const {
-	return line_num;
+	return line_num + 1;
 }
 
 size_t Lexem::getInd() const {

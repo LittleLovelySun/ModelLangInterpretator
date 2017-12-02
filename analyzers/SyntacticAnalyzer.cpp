@@ -24,8 +24,6 @@ SyntacticAnalyzer::SyntacticAnalyzer(const std::vector<Lexem> &lex, const TableI
 	in = input;
 }
 
-
-
 bool SyntacticAnalyzer::analyze() {
 	try {
 		if (!lexems[0].check(lex_program))
@@ -56,7 +54,6 @@ bool SyntacticAnalyzer::analyze() {
 	return true;
 }
 
-
 void SyntacticAnalyzer::parse() {
 	if (currLex().check(lex_while)) {
 		parseWhile();
@@ -78,10 +75,9 @@ void SyntacticAnalyzer::parse() {
 		parseRead();
 	}
 
-	else if (currLex().check(lex_write)) {
-		parseWrite();
+	else if (currLex().check(lex_write) || currLex().check(lex_writeln)) {
+		parseWrite(currLex().check(lex_writeln));
 	}
-
 	else if (currLex().check(LexemT::ident)) {
 		parseAsign();
 	}
@@ -101,7 +97,6 @@ void SyntacticAnalyzer::parse() {
 		throw ("Unexpexted symbol '") + currLex().getName() + "'!";
 }
 
-
 void SyntacticAnalyzer::parseDeclaration(IdentT type) {
 	do {
 		nextLex();
@@ -111,7 +106,7 @@ void SyntacticAnalyzer::parseDeclaration(IdentT type) {
 		Ident* tmp = table.getByName(currLex().getName());
 
 		if (tmp->getDec())
-			throw string("Identifier '") + tmp->getName() + string("' was already declared");
+			throw string("Identifier '") + tmp->getName() + string("' was already declaredin line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 
 		tmp->setType(type);
 		tmp->setAsDefault();
@@ -124,10 +119,10 @@ void SyntacticAnalyzer::parseDeclaration(IdentT type) {
 			if (currLex().check(LexemT::ident)) {
 				Ident *t = table.getByName(currLex().getName());
 				if (!t->getDec())
-					throw string("Identifier '") + t->getName() + string("' is not declared");
+					throw string("Identifier '") + t->getName() + string("' is not declaredin line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 
 				if (type != t->getType()) 
-					throw string("Identifieres '") + tmp->getName() +"' and '" + t->getName() + string("' have different types");
+					throw string("Identifieres '") + tmp->getName() +"' and '" + t->getName() + string("' have different typesin line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 				tmp->setValue(t->getValue());
 			}
 			
@@ -135,19 +130,19 @@ void SyntacticAnalyzer::parseDeclaration(IdentT type) {
 				bool sign = currLex().check(lex_minus);
 				if (sign) {
 					if (!(type == IdentT::type_int || type == IdentT::type_real))
-						throw string("Symbol '-' with type can't be used with string or bool identifieres");
+						throw string("Symbol '-' with type can't be used with string or bool identifieresin line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 
 					nextLex();
 					currLex().setName(lex_minus + currLex().getName());
 				}
 					
 				if (type != currLex().getIdentT())
-					throw string("Constant value '") + currLex().getName() + "' and '" + tmp->getName() + "' have different types in line: " + getString();
+					throw string("Constant value '") + currLex().getName() + "' and '" + tmp->getName() + "' have different types in line " + to_string(currLex().getLineNum()) + "\n" + getString();
 
 				tmp->setValue(currLex().getName());
 			}
 			else
-				throw string("Identifier or constatnt value expected!");
+				throw string("Identifier or constatnt value expected!") + "in line: " + to_string(currLex().getLineNum()) + "\n" + getString();
 
 			nextLex();
 		}
@@ -155,7 +150,7 @@ void SyntacticAnalyzer::parseDeclaration(IdentT type) {
 	} while (currLex().check(lex_comma));
 
 	if (!currLex().check(lex_semicolon)) 
-		throw string("Incorrect symbol ") + currLex().getName() + " in declaration in line: " + getString();
+		throw string("Incorrect symbol ") + currLex().getName() + " in declaration in line: " + to_string(currLex().getLineNum()) + "\n" + getString();
 	
 	nextLex();
 }
@@ -169,7 +164,7 @@ IdentT SyntacticAnalyzer::checkTypes(IdentT left, Lexem sign, IdentT right) {
 		if (left == IdentT::type_int && right == IdentT::type_int)
 			return IdentT::type_int;
 
-		if ((left == IdentT::type_real || left == IdentT::type_int) && (right == IdentT::type_real || right == IdentT::type_int) && sign.check(lex_mod))
+		if ((left == IdentT::type_real || left == IdentT::type_int) && (right == IdentT::type_real || right == IdentT::type_int) && !sign.check(lex_mod))
 			return IdentT::type_real;
 
 		if (left == IdentT::type_string && right == IdentT::type_string && sign.check(lex_plus))
@@ -208,21 +203,6 @@ IdentT SyntacticAnalyzer::parseIdent() {
 	nextLex();
 
 	return tmp->getType();
-}
-
-string SyntacticAnalyzer::getString(bool prev) {
-	string s;
-	size_t index = currLex().getInd();
-
-	if (prev) 
-		index--;
-	
-	while (in[index] != '\n' && index < in.length()) {
-		s += in[index];
-		index++;
-	}
-
-	return s;
 }
 
 void SyntacticAnalyzer::parseWhile() {
@@ -284,7 +264,7 @@ void SyntacticAnalyzer::parseDoWhile() {
 
 	//TODO: checkDelimeter(lex_semicolon);
 	if (!currLex().check(lex_semicolon))
-		throw string ("Missing ';' in line:")+ to_string(currLex().getLineNum()) + "\n" + getString();
+		throw string ("Missing ';' in line:")+ to_string(currLex().getLineNum()) + "\n" + getString(true);
 
 	nextLex();
 
@@ -353,7 +333,7 @@ void SyntacticAnalyzer::parseFor() {
 			throw string("Expresion can be only bool in condition in line ") + to_string(currLex().getLineNum()) + "\n" + getString();
 
 		if (!currLex().check(lex_semicolon))
-			throw string ("Missing ';' ") + getString();
+			throw string ("Missing ';' ") + getString(true);
 	}
 
 	size_t falseLabel = rpn.size();
@@ -398,12 +378,12 @@ void SyntacticAnalyzer::parseRead() {
 	nextLex();
 
 	if (!currLex().check(lex_semicolon))
-		throw string ("Missing ';' in line: ") + to_string(currLex().getLineNum()) + "\n" + getString();
+		throw string ("Missing ';' in line: ") + to_string(currLex().getLineNum()) + "\n" + getString(true);
 
 	nextLex();
 }
 
-void SyntacticAnalyzer::parseWrite() {
+void SyntacticAnalyzer::parseWrite(bool isWriteln) {
 	nextLex();
 
 	if (!currLex().check(lex_lparenthesis))
@@ -415,14 +395,15 @@ void SyntacticAnalyzer::parseWrite() {
 		rpn.push_back(Lexem(LexemT::keyword, lex_write));
 	} while (currLex().check(lex_comma));
 
-
+	if (isWriteln)
+		rpn[rpn.size() - 1].setName(lex_writeln);
 
 	if (!currLex().check(lex_rparanthesis))
 		throw string ("Uncapped bracketin line ") + "\n" + getString();
 
 	nextLex();
 	if (!currLex().check(lex_semicolon))
-		throw string ("Missing ';' in line: \n") + getString();
+		throw string ("Missing ';' in line: \n") + getString(true);
 
 	nextLex();
 }
@@ -542,21 +523,27 @@ void SyntacticAnalyzer::parseAsign(bool needSemicolon) {
 	} 
 	else {
 		Lexem sign(LexemT::delimeter, "");
+		Lexem sign1(LexemT::delimeter, "");
 
 		if (currLex().check(lex_plus_value)) {
 			sign.setName(lex_plus);
+			sign1.setName(lex_plus_value);
 		}
 		else if (currLex().check(lex_minus_value)) {
 			sign.setName(lex_minus);
+			sign1.setName(lex_minus_value);
 		}
-		else if (currLex().check(lex_minus_value)) {
+		else if (currLex().check(lex_mult_value)) {
 			sign.setName(lex_mult);
+			sign1.setName(lex_mult_value);
 		}
-		else if (currLex().check(lex_minus_value)) {
+		else if (currLex().check(lex_div_value)) {
 			sign.setName(lex_div);
+			sign1.setName(lex_div_value);
 		}
-		else if (currLex().check(lex_minus_value)) {
+		else if (currLex().check(lex_mod_value)) {
 			sign.setName(lex_mod);
+			sign1.setName(lex_mod_value);
 		}
 		else 
 			throw string("Unknown operation '") + currLex().getName() + " in line " + to_string(currLex().getLineNum()) + "\n" + getString();
@@ -566,12 +553,12 @@ void SyntacticAnalyzer::parseAsign(bool needSemicolon) {
 
 		checkTypes(left, sign, right);
 
-		rpn.push_back(Lexem(LexemT::rpn_short_op, sign.getName()));
+		rpn.push_back(Lexem(LexemT::rpn_short_op, sign1.getName()));
 	}
 
 	if (needSemicolon) {
 		if (!currLex().check(lex_semicolon)) 
-			throw string("Missing ';' ")  + " in declaration";
+			throw string("Missing ';' ")  + " in declaration" + " in line " + to_string(currLex().getLineNum()) + "\n" + getString(true);;
 
 		nextLex();
 	}		
@@ -610,4 +597,27 @@ void SyntacticAnalyzer::printRPN() const{
 		index++;
 	}
 	cout << endl;
+}
+
+string SyntacticAnalyzer::getString(bool prev) {
+	string s;
+	size_t index = currLex().getInd();
+
+	if (prev) 
+		index = lexems[ind-1].getInd();
+	
+	while (in[index] != '\n' && index < in.length()) {
+		s += in[index];
+		index++;
+	}
+
+	return s;
+}
+
+TableIdent& SyntacticAnalyzer::getTableIdent() {
+	return table;
+}
+
+vector<Lexem> &SyntacticAnalyzer::getRPN() {
+	return rpn;
 }

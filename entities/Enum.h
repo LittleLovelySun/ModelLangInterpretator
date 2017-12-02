@@ -58,6 +58,7 @@ const std::string lex_else = "else";
 // IO functions
 const std::string lex_read = "read";
 const std::string lex_write = "write";
+const std::string lex_writeln = "writeln";
 
 // Boolean operations
 const std::string lex_not = "not";
@@ -140,7 +141,7 @@ const std::vector<std::string> keywords = {
 	lex_program,
 	lex_while, lex_do, lex_for,
 	lex_if, lex_else,
-	lex_read, lex_write,
+	lex_read, lex_write, lex_writeln,
 	lex_not, lex_and, lex_or
 };
 

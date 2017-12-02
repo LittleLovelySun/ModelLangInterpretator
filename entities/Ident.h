@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Enum.h"
+#include "Lexem.h"
 
 class Ident {
 	IdentT type;
@@ -24,6 +25,8 @@ public:
 	std::string getName() const;
 	std::string getValue() const;
 	bool getDec() const;
+
+	Lexem toLexem() const;
 
 	std::string TypeToString() const;
 

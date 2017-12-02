@@ -53,13 +53,22 @@ bool Ident::getDec() const{
 	return declared;
 }
 
+Lexem Ident::toLexem() const {
+	switch (type) {
+		case IdentT::type_int: return Lexem(LexemT::const_int, value);
+		case IdentT::type_real: return Lexem(LexemT::const_real, value);
+		case IdentT::type_bool: return Lexem(LexemT::const_bool, value);
+		case IdentT::type_string: return Lexem(LexemT::const_string, value);
+		default: return Lexem(LexemT::unknown, value);
+	}
+}
+
 std::string Ident::TypeToString() const {
 	switch(type) {
 		case IdentT::type_int: return str_type_int;
 		case IdentT::type_real: return str_type_real;
 		case IdentT::type_string: return str_type_string;
 		case IdentT::type_bool: return str_type_bool;
-		case IdentT::unknown: 
 		default: return str_unknown;
 	}
 }
